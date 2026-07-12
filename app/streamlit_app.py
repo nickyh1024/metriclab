@@ -55,7 +55,7 @@ with funnel_tab:
         )
         .properties(height=250)
     )
-    st.altair_chart(funnel_chart, use_container_width=True)
+    st.altair_chart(funnel_chart, width="stretch")
     display = funnel.copy()
     display["conversion_from_previous_stage"] = display[
         "conversion_from_previous_stage"
@@ -69,7 +69,7 @@ with funnel_tab:
             }
         ),
         hide_index=True,
-        use_container_width=True,
+        width="stretch",
     )
     st.metric("Overall view-to-purchase conversion", "3.5%")
     st.markdown(
