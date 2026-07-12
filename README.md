@@ -4,6 +4,10 @@ MetricLab is an e-commerce experimentation and product analytics platform. It
 turns event-level customer behavior into trustworthy experiment results and a
 clear product recommendation.
 
+[![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://metriclab-dw6kqwuewkw97j7dlustmp.streamlit.app/)
+
+**Live app:** https://metriclab-dw6kqwuewkw97j7dlustmp.streamlit.app/
+
 The first use case evaluates whether clearer product information and a stronger
 call to action improve view-to-cart conversion without reducing revenue per
 session.
@@ -53,4 +57,3 @@ python -m unittest discover -s tests -v
 
 1. Add automated data-quality checks.
 2. Add CUPED variance reduction as an advanced extension.
-3. Deploy the dashboard publicly.
