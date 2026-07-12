@@ -10,7 +10,7 @@ purchase conversion without reducing revenue per user.
 ## What is implemented
 
 - A pre-registered experiment specification in `docs/experiment_spec.md`
-- A real January 2021 user funnel queried from Google's public GA4 sample
+- A real, ordered January 2021 session funnel queried from Google's public GA4 sample
 - Deterministic synthetic user-level e-commerce data
 - Stable user-level treatment assignment
 - Conversion lift, confidence intervals, p-values, and revenue guardrails
@@ -40,7 +40,7 @@ python -m unittest discover -s tests -v
 
 ## Roadmap
 
-1. Add session-level, ordered funnel transformations from BigQuery.
-2. Add power analysis, sample-ratio-mismatch detection, and CUPED.
+1. Add power analysis and sample-ratio-mismatch detection.
+2. Add CUPED variance reduction.
 3. Add segment analysis and automated data-quality checks.
 4. Publish an executive experiment readout and deploy the dashboard.

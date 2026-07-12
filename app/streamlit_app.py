@@ -15,31 +15,42 @@ funnel_tab, experiment_tab = st.tabs(["Real customer funnel", "Simulated experim
 
 with funnel_tab:
     st.info(
-        "Observed January 2021 user counts from Google's public, obfuscated "
-        "GA4 e-commerce sample. These are descriptive metrics, not experiment results."
+        "Observed January 2021 ordered session counts from Google's public, "
+        "obfuscated GA4 e-commerce sample. These are descriptive metrics, not "
+        "experiment results."
     )
-    data_path = Path(__file__).parents[1] / "data" / "sample" / "funnel_2021_01.csv"
+    data_path = (
+        Path(__file__).parents[1]
+        / "data"
+        / "sample"
+        / "ordered_session_funnel_2021_01.csv"
+    )
     funnel = pd.read_csv(data_path)
-    funnel["previous_stage_rate"] = funnel["users"] / funnel["users"].shift(1)
-    funnel.loc[0, "previous_stage_rate"] = 1.0
 
-    st.bar_chart(funnel.set_index("stage")["users"], horizontal=True)
+    st.bar_chart(funnel.set_index("stage")["sessions"], horizontal=True)
     display = funnel.copy()
-    display["previous_stage_rate"] = display["previous_stage_rate"].map("{:.1%}".format)
+    display["conversion_from_previous_stage"] = display[
+        "conversion_from_previous_stage"
+    ].map("{:.1%}".format)
     st.dataframe(
         display.rename(
             columns={
                 "stage": "Stage",
-                "users": "Users",
-                "previous_stage_rate": "Conversion from previous stage",
+                "sessions": "Sessions",
+                "conversion_from_previous_stage": "Conversion from previous stage",
             }
         ),
         hide_index=True,
         use_container_width=True,
     )
+    st.metric("Overall view-to-purchase conversion", "3.5%")
+    st.markdown(
+        "**Primary opportunity:** only 18.3% of sessions with a product view "
+        "progress to adding an item to the cart."
+    )
     st.caption(
-        "Source query: sql/marts/user_funnel.sql. Distinct-user stages are "
-        "aggregated independently and do not enforce ordered event sequences."
+        "Source query: sql/marts/ordered_session_funnel.sql. Each later stage "
+        "must occur after the previous stage in the same user session."
     )
 
 with experiment_tab:
