@@ -5,7 +5,11 @@ from pathlib import Path
 import pandas as pd
 import streamlit as st
 
-from metriclab import analyze_experiment, simulate_checkout_experiment
+from metriclab import (
+    analyze_experiment,
+    simulate_checkout_experiment,
+    two_proportion_sample_size,
+)
 
 st.set_page_config(page_title="MetricLab", page_icon="📐", layout="wide")
 st.title("MetricLab")
@@ -83,9 +87,42 @@ with experiment_tab:
     with st.sidebar:
         st.header("Simulation settings")
         users = st.slider("Eligible users", 2_000, 100_000, 20_000, step=2_000)
-        baseline = st.slider("Baseline conversion", 0.02, 0.40, 0.12, step=0.01)
-        effect = st.slider("Absolute treatment effect", -0.03, 0.05, 0.012, step=0.001)
+        baseline = st.slider(
+            "Baseline conversion", 0.02, 0.40, 0.183, step=0.001
+        )
+        effect = st.slider(
+            "Absolute treatment effect", -0.03, 0.05, 0.017, step=0.001
+        )
         seed = st.number_input("Random seed", min_value=0, value=42, step=1)
+
+    st.subheader("Experiment planning")
+    planning_col1, planning_col2 = st.columns(2)
+    planned_lift = planning_col1.slider(
+        "Minimum detectable absolute lift",
+        min_value=0.005,
+        max_value=0.05,
+        value=0.017,
+        step=0.001,
+        format="%.3f",
+    )
+    eligible_sessions_per_day = planning_col2.number_input(
+        "Expected eligible sessions per day",
+        min_value=100,
+        value=750,
+        step=50,
+    )
+    plan = two_proportion_sample_size(0.183, planned_lift)
+    estimated_days = plan.total_users / eligible_sessions_per_day
+
+    plan_col1, plan_col2, plan_col3 = st.columns(3)
+    plan_col1.metric("Sessions per variant", f"{plan.users_per_variant:,}")
+    plan_col2.metric("Total sessions", f"{plan.total_users:,}")
+    plan_col3.metric("Estimated duration", f"{estimated_days:.1f} days")
+    st.caption(
+        f"Designed to detect a change from {plan.baseline_rate:.1%} to "
+        f"{plan.target_rate:.1%} with {plan.power:.0%} power at a two-sided "
+        f"{plan.alpha:.0%} significance level."
+    )
 
     data = simulate_checkout_experiment(users, baseline, effect, int(seed))
     result = analyze_experiment(data)

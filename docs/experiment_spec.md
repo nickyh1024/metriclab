@@ -16,8 +16,8 @@ complete a purchase.
 - **Control:** Existing checkout experience
 - **Treatment:** Simplified checkout experience
 - **Allocation:** 50% control, 50% treatment
-- **Primary metric:** Purchase conversion rate per eligible user
-- **Secondary metric:** Checkout completion rate
+- **Primary product-page metric:** View-to-cart conversion per eligible session
+- **Secondary metric:** Purchase conversion rate
 - **Guardrail:** Revenue per eligible user
 - **Diagnostic segments:** Device category, traffic source, and new/returning
   user status
@@ -30,6 +30,14 @@ complete a purchase.
 - Use a significance threshold of 0.05 for the primary metric.
 - Do not claim segment effects without correcting for multiple comparisons.
 - Check assignment balance and data quality before interpreting results.
+
+## Sample-size plan
+
+The January ordered funnel established an 18.3% baseline view-to-cart rate. The
+default planning scenario targets a 1.7 percentage-point absolute improvement,
+from 18.3% to 20.0%, with 80% power and a two-sided 5% significance level.
+MetricLab calculates the required equal-sized control and treatment groups
+before simulating outcomes.
 
 ## Decision rule
 
@@ -44,4 +52,3 @@ The initial version uses synthetic outcomes with a documented injected effect.
 It validates MetricLab's analysis workflow but does not measure the causal
 effect of an actual product change. A production experiment would require real
 randomized exposure and validated instrumentation.
-

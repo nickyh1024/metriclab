@@ -3,6 +3,7 @@ import unittest
 import pandas as pd
 
 from metriclab.analysis import analyze_experiment
+from metriclab.power import two_proportion_sample_size
 from metriclab.simulation import simulate_checkout_experiment
 
 
@@ -36,6 +37,19 @@ class MetricLabTests(unittest.TestCase):
                 baseline_conversion=0.99,
                 absolute_treatment_effect=0.02,
             )
+
+    def test_power_plan_grows_for_smaller_effect(self):
+        small_effect = two_proportion_sample_size(0.183, 0.01)
+        large_effect = two_proportion_sample_size(0.183, 0.02)
+        self.assertGreater(
+            small_effect.users_per_variant,
+            large_effect.users_per_variant,
+        )
+        self.assertEqual(small_effect.total_users, small_effect.users_per_variant * 2)
+
+    def test_power_plan_rejects_invalid_inputs(self):
+        with self.assertRaisesRegex(ValueError, "absolute_lift"):
+            two_proportion_sample_size(0.183, 0)
 
 
 if __name__ == "__main__":
