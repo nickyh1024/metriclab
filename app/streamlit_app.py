@@ -48,6 +48,27 @@ with funnel_tab:
         "**Primary opportunity:** only 18.3% of sessions with a product view "
         "progress to adding an item to the cart."
     )
+    with st.expander("Acquisition segment detail"):
+        acquisition_path = (
+            Path(__file__).parents[1]
+            / "data"
+            / "sample"
+            / "view_to_cart_by_acquisition_2021_01.csv"
+        )
+        acquisition = pd.read_csv(acquisition_path)
+        acquisition["segment"] = (
+            acquisition["acquisition_source"]
+            + " / "
+            + acquisition["acquisition_medium"]
+        )
+        st.bar_chart(
+            acquisition.set_index("segment")["view_to_cart_rate"],
+            horizontal=True,
+        )
+        st.caption(
+            "First-touch acquisition segments are descriptive, not randomized. "
+            "Differences may reflect visitor intent, attribution quality, or other factors."
+        )
     st.caption(
         "Source query: sql/marts/ordered_session_funnel.sql. Each later stage "
         "must occur after the previous stage in the same user session."
