@@ -7,6 +7,7 @@ import streamlit as st
 
 from metriclab import (
     analyze_experiment,
+    check_assignment_balance,
     simulate_checkout_experiment,
     two_proportion_sample_size,
 )
@@ -125,7 +126,23 @@ with experiment_tab:
     )
 
     data = simulate_checkout_experiment(users, baseline, effect, int(seed))
+    balance = check_assignment_balance(data)
     result = analyze_experiment(data)
+
+    st.subheader("Assignment quality")
+    balance_col1, balance_col2, balance_col3 = st.columns(3)
+    balance_col1.metric("Control sessions", f"{balance.control_users:,}")
+    balance_col2.metric("Treatment sessions", f"{balance.treatment_users:,}")
+    balance_col3.metric(
+        "Balance check",
+        "Pass" if balance.passed else "Fail",
+        f"p = {balance.p_value:.4f}",
+    )
+    if not balance.passed:
+        st.error(
+            "The assignment split is suspicious. Investigate randomization or "
+            "tracking before interpreting experiment outcomes."
+        )
 
     st.subheader("Decision")
     st.markdown(f"## {result.recommendation}")
