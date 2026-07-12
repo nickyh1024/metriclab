@@ -1,5 +1,7 @@
 # MetricLab
 
+[![Tests](https://github.com/nickyh1024/metriclab/actions/workflows/tests.yml/badge.svg)](https://github.com/nickyh1024/metriclab/actions/workflows/tests.yml)
+
 MetricLab is an e-commerce experimentation and product analytics platform. It
 turns event-level customer behavior into trustworthy experiment results and a
 clear product recommendation.
