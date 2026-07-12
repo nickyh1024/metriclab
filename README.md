@@ -22,6 +22,16 @@ The dashboard separates observed funnel metrics from simulated experiment
 results. The simulated treatment effect is explicitly labeled and is not
 evidence about a real product-page redesign.
 
+## Dashboard
+
+### Observed customer funnel
+
+![MetricLab ordered customer funnel](docs/assets/metriclab_funnel.png)
+
+### Experiment planning
+
+![MetricLab simulated experiment](docs/assets/metriclab_experiment.png)
+
 ## Quick start
 
 Requires Python 3.11 or newer.
@@ -43,4 +53,4 @@ python -m unittest discover -s tests -v
 
 1. Add automated data-quality checks.
 2. Add CUPED variance reduction as an advanced extension.
-3. Deploy the dashboard and add screenshots.
+3. Deploy the dashboard publicly.

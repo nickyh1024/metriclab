@@ -2,6 +2,7 @@
 
 from pathlib import Path
 
+import altair as alt
 import pandas as pd
 import streamlit as st
 
@@ -32,7 +33,29 @@ with funnel_tab:
     )
     funnel = pd.read_csv(data_path)
 
-    st.bar_chart(funnel.set_index("stage")["sessions"], horizontal=True)
+    funnel_chart = (
+        alt.Chart(funnel)
+        .mark_bar(cornerRadiusEnd=5, color="#2563EB")
+        .encode(
+            x=alt.X("sessions:Q", title="Sessions"),
+            y=alt.Y(
+                "stage:N",
+                title=None,
+                sort=["Viewed item", "Added to cart", "Began checkout", "Purchased"],
+            ),
+            tooltip=[
+                alt.Tooltip("stage:N", title="Stage"),
+                alt.Tooltip("sessions:Q", title="Sessions", format=","),
+                alt.Tooltip(
+                    "conversion_from_previous_stage:Q",
+                    title="Previous-stage conversion",
+                    format=".1%",
+                ),
+            ],
+        )
+        .properties(height=250)
+    )
+    st.altair_chart(funnel_chart, use_container_width=True)
     display = funnel.copy()
     display["conversion_from_previous_stage"] = display[
         "conversion_from_previous_stage"
@@ -85,16 +108,20 @@ with experiment_tab:
         "and is not a real causal finding."
     )
 
-    with st.sidebar:
-        st.header("Simulation settings")
-        users = st.slider("Eligible users", 2_000, 100_000, 20_000, step=2_000)
-        baseline = st.slider(
-            "Baseline conversion", 0.02, 0.40, 0.183, step=0.001
-        )
-        effect = st.slider(
-            "Absolute treatment effect", -0.03, 0.05, 0.017, step=0.001
-        )
-        seed = st.number_input("Random seed", min_value=0, value=42, step=1)
+    with st.expander("Simulation settings", expanded=False):
+        setting_col1, setting_col2 = st.columns(2)
+        with setting_col1:
+            users = st.slider(
+                "Eligible sessions", 2_000, 100_000, 20_000, step=2_000
+            )
+            baseline = st.slider(
+                "Baseline conversion", 0.02, 0.40, 0.183, step=0.001
+            )
+        with setting_col2:
+            effect = st.slider(
+                "Absolute treatment effect", -0.03, 0.05, 0.017, step=0.001
+            )
+            seed = st.number_input("Random seed", min_value=0, value=42, step=1)
 
     st.subheader("Experiment planning")
     planning_col1, planning_col2 = st.columns(2)
