@@ -2,30 +2,31 @@
 
 ## Decision
 
-Should the e-commerce product ship a simplified checkout experience?
+Should the e-commerce product ship a clearer product page with a stronger
+add-to-cart call to action?
 
 ## Hypothesis
 
-Reducing checkout friction will increase the percentage of eligible users who
-complete a purchase.
+Clearer product information and a more prominent call to action will increase
+the percentage of eligible product-view sessions that add an item to the cart.
 
 ## Design
 
-- **Population:** Users who begin an eligible shopping session
-- **Randomization unit:** User
-- **Control:** Existing checkout experience
-- **Treatment:** Simplified checkout experience
+- **Population:** Eligible sessions that view a product
+- **Randomization unit:** Session
+- **Control:** Existing product page
+- **Treatment:** Clearer product information and stronger add-to-cart call to action
 - **Allocation:** 50% control, 50% treatment
 - **Primary product-page metric:** View-to-cart conversion per eligible session
 - **Secondary metric:** Purchase conversion rate
-- **Guardrail:** Revenue per eligible user
+- **Guardrail:** Revenue per eligible session
 - **Diagnostic segments:** Device category, traffic source, and new/returning
   user status
 
 ## Statistical plan
 
-- Analyze users according to their assigned group (intent to treat).
-- Estimate absolute and relative lift in purchase conversion.
+- Analyze sessions according to their assigned group (intent to treat).
+- Estimate absolute and relative lift in view-to-cart conversion.
 - Report a two-sided 95% confidence interval and two-proportion z-test.
 - Use a significance threshold of 0.05 for the primary metric.
 - Do not claim segment effects without correcting for multiple comparisons.

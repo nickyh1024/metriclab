@@ -8,7 +8,7 @@ import streamlit as st
 from metriclab import (
     analyze_experiment,
     check_assignment_balance,
-    simulate_checkout_experiment,
+    simulate_product_page_experiment,
     two_proportion_sample_size,
 )
 
@@ -125,7 +125,7 @@ with experiment_tab:
         f"{plan.alpha:.0%} significance level."
     )
 
-    data = simulate_checkout_experiment(users, baseline, effect, int(seed))
+    data = simulate_product_page_experiment(users, baseline, effect, seed=int(seed))
     balance = check_assignment_balance(data)
     result = analyze_experiment(data)
 
@@ -148,9 +148,9 @@ with experiment_tab:
     st.markdown(f"## {result.recommendation}")
 
     col1, col2, col3, col4 = st.columns(4)
-    col1.metric("Control conversion", f"{result.control_conversion:.2%}")
+    col1.metric("Control view-to-cart", f"{result.control_conversion:.2%}")
     col2.metric(
-        "Treatment conversion",
+        "Treatment view-to-cart",
         f"{result.treatment_conversion:.2%}",
         f"{result.absolute_lift:.2%} absolute",
     )
@@ -169,6 +169,17 @@ with experiment_tab:
         "Treatment": result.treatment_revenue_per_user,
     }
     st.bar_chart(revenue, horizontal=True)
+    st.caption(
+        f"Treatment revenue per session changed by "
+        f"{result.revenue_relative_change:+.1%}. The simulated treatment has no "
+        "injected revenue effect, so observed differences are sampling noise."
+    )
+    revenue_lower, revenue_upper = result.revenue_confidence_interval
+    st.write(
+        "95% confidence interval for the revenue-per-session difference: "
+        f"**${revenue_lower:.2f} to ${revenue_upper:.2f}** "
+        f"(p = {result.revenue_p_value:.3f})."
+    )
 
     with st.expander("Experiment design"):
         st.markdown(
